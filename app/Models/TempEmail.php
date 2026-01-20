@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -23,9 +24,21 @@ class TempEmail extends Model
 
     /**
      * Письма этой почты
+     * 
+     * @return HasMany
      */
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Сколько дней осталось до удаления (новый метод)
+     * 
+     * @return int
+     */
+    public function getDaysLeftAttribute(): int
+    {
+        return Carbon::now()->diffInDays($this->expires_at, false);
     }
 }
